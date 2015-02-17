@@ -62,6 +62,27 @@
     return self;
 }
 
+- (id) initWithClientId:(NSString *)clientId
+                session:(LiveConnectSession *)session
+               delegate:(id<LiveAuthDelegate>)delegate
+              userState:(id)userState
+{
+    self = [super init];
+    if (self)
+    {
+        _clientId = [clientId copy];
+        _scopes = [session.scopes copy];
+        _storage = [[LiveAuthStorage alloc] initWithClientId:clientId];
+        _status = LiveAuthUnknown;
+        _session = session;
+    }
+    
+    [self refreshSessionWithDelegate:delegate
+                           userState:userState];
+    
+    return self;
+}
+
 - (void)dealloc
 {
     [authRefreshRequest cancel];

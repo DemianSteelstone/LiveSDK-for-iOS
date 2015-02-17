@@ -84,6 +84,11 @@
                delegate:(id<LiveAuthDelegate>)delegate
               userState:(id)userState;
 
+- (id) initWithClientId:(NSString *)clientId
+                session:(LiveConnectSession *)session
+               delegate:(id<LiveAuthDelegate>)delegate
+              userState:(id)userState;
+
 #pragma mark - login* methods
 
 // login* methods are async methods used to present a modal window and show login and authorization forms so 

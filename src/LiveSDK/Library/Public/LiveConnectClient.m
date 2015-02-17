@@ -99,6 +99,34 @@
     return self;
 }
 
+- (id) initWithClientId:(NSString *)clientId
+                session:(LiveConnectSession *)session
+               delegate:(id<LiveAuthDelegate>)delegate
+              userState:(id)userState
+{
+    if ([StringHelper isNullOrEmpty:clientId])
+    {
+        [NSException raise:NSInvalidArgumentException format:LIVE_ERROR_DESC_MISSING_PARAMETER, @"clientId", @"initWithClientId:redirectUri:scopes:delegate:userState"];
+    }
+    
+    if (_liveClientCore)
+    {
+        // We already initialized, so silently ignore it.
+        return self;
+    }
+    
+    self = [super init];
+    if (self)
+    {
+        _liveClientCore = [[LiveConnectClientCore alloc] initWithClientId:clientId
+                                                                  session:session
+                                                                 delegate:delegate
+                                                                userState:userState];
+    }
+    
+    return self;
+}
+
 - (void)dealloc
 {
     [_liveClientCore release];
