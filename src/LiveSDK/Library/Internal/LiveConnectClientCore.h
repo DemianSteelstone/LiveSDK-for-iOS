@@ -30,6 +30,7 @@
 #import "LiveAuthRefreshRequest.h"
 #import "LiveConnectSession.h"
 #import "LiveConstants.h"
+#import "LiveAuthStorage.h"
 #import "LiveDownloadOperationCore.h"
 #import "LiveDownloadOperationDelegate.h"
 #import "LiveOperationCore.h"
@@ -40,7 +41,10 @@
 @class LiveAuthRefreshRequest;
 
 @interface LiveConnectClientCore : NSObject 
-
+{
+@private
+    LiveAuthStorage *_storage;
+}
 @property (nonatomic, readonly) NSString *clientId;
 @property (nonatomic, readonly) NSArray *scopes;
 

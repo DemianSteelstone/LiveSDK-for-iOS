@@ -255,7 +255,6 @@ NSString * LIVE_ENDPOINT_LOGIN_HOST = @"login.live.com";
     BOOL hasRefreshToken = ![StringHelper isNullOrEmpty:refreshToken];
     if (session != nil) 
     {
-        
         return hasRefreshToken && ([session.expires timeIntervalSinceNow] < LIVE_AUTH_REFRESH_TIME_BEFORE_EXPIRE);
     }
     else
