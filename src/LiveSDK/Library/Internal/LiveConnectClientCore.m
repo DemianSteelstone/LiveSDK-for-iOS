@@ -51,7 +51,6 @@
     if (self) 
     {
         _clientId = [clientId copy];
-        _storage = [[[LiveAuthStorage alloc] initWithClientId:clientId] retain];
         _scopes = [scopes copy];
         _status = LiveAuthUnknown;
         _session = nil;
@@ -70,7 +69,6 @@
     {
         _clientId = [clientId copy];
         _scopes = [session.scopes copy];
-        _storage = [[[LiveAuthStorage alloc] initWithClientId:clientId] retain];
         _status = LiveAuthUnknown;
         _session = session;
         [_session retain];
@@ -87,7 +85,6 @@
     [authRefreshRequest cancel];
     
     [_clientId release];
-    [_storage release];
     [_scopes release];
     [_session release];
     [_authRequest release];
@@ -165,19 +162,17 @@
         _status = LiveAuthConnected;
     }
     
-    // By the time we update the session, we persist the refreshToken.
-    _storage.refreshToken = session.refreshToken;
 }
 
 - (void) refreshSessionWithDelegate:(id<LiveAuthDelegate>)delegate
                           userState:(id)userState
 {
     if ([LiveAuthHelper shouldRefreshToken:_session 
-                              refreshToken:_storage.refreshToken])
+                              refreshToken:_session.refreshToken])
     {
         authRefreshRequest = [[[LiveAuthRefreshRequest alloc] initWithClientId:_clientId
                                                                          scope:_scopes
-                                                                  refreshToken:_storage.refreshToken
+                                                                  refreshToken:_session.refreshToken
                                                                       delegate:delegate
                                                                      userState:userState
                                                                     clientStub:self]

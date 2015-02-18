@@ -90,7 +90,10 @@
 
 - (void) setRefreshToken:(NSString *)refreshToken
 {
-    [_refreshToken release];    
+    if (refreshToken.length == 0)
+        return;
+    
+    [_refreshToken release];
     _refreshToken = [refreshToken retain];
     
     [self save];
