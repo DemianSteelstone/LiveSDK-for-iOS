@@ -62,7 +62,6 @@
 - (id) initWithClientId:(NSString *)clientId
                 session:(LiveConnectSession *)session
                delegate:(id<LiveAuthDelegate>)delegate
-              userState:(id)userState
 {
     self = [super init];
     if (self)
@@ -73,9 +72,6 @@
         _session = session;
         [_session retain];
     }
-    
-    [self refreshSessionWithDelegate:delegate
-                           userState:userState];
     
     return self;
 }
@@ -103,8 +99,8 @@
     if (self.session && 
         [LiveAuthHelper isScopes:scopes subSetOf:self.session.scopes]) 
     {
-        NSArray *authCompletedEvent = [NSArray arrayWithObjects:delegate, userState, nil];
-        [self performSelector:@selector(sendAuthCompletedMessage:) withObject:authCompletedEvent afterDelay:0.1];
+        [self refreshSessionWithDelegate:delegate
+                               userState:userState];
         return;
     }
     

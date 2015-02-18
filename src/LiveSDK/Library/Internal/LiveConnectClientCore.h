@@ -58,8 +58,7 @@
 
 - (id) initWithClientId:(NSString *)clientId
                 session:(LiveConnectSession *)session
-                delegate:(id<LiveAuthDelegate>)delegate
-              userState:(id)userState;;
+                delegate:(id<LiveAuthDelegate>)delegate;
 
 - (void) login:(UIViewController *)currentViewController
         scopes:(NSArray *)scopes

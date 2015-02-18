@@ -102,7 +102,6 @@
 - (id) initWithClientId:(NSString *)clientId
                 session:(LiveConnectSession *)session
                delegate:(id<LiveAuthDelegate>)delegate
-              userState:(id)userState
 {
     if ([StringHelper isNullOrEmpty:clientId])
     {
@@ -120,8 +119,7 @@
     {
         _liveClientCore = [[LiveConnectClientCore alloc] initWithClientId:clientId
                                                                   session:session
-                                                                 delegate:delegate
-                                                                userState:userState];
+                                                                 delegate:delegate];
     }
     
     return self;
