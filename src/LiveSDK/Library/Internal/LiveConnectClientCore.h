@@ -28,7 +28,6 @@
 #import "LiveAuthDelegate.h"
 #import "LiveAuthRequest.h"
 #import "LiveAuthRefreshRequest.h"
-#import "LiveAuthStorage.h"
 #import "LiveConnectSession.h"
 #import "LiveConstants.h"
 #import "LiveDownloadOperationCore.h"
@@ -41,10 +40,6 @@
 @class LiveAuthRefreshRequest;
 
 @interface LiveConnectClientCore : NSObject 
-{
-@private
-    LiveAuthStorage *_storage;
-}
 
 @property (nonatomic, readonly) NSString *clientId;
 @property (nonatomic, readonly) NSArray *scopes;
@@ -63,8 +58,7 @@
 
 - (id) initWithClientId:(NSString *)clientId
                 session:(LiveConnectSession *)session
-                delegate:(id<LiveAuthDelegate>)delegate
-              userState:(id)userState;;
+                delegate:(id<LiveAuthDelegate>)delegate;
 
 - (void) login:(UIViewController *)currentViewController
         scopes:(NSArray *)scopes

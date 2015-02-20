@@ -86,8 +86,7 @@
 
 - (id) initWithClientId:(NSString *)clientId
                 session:(LiveConnectSession *)session
-               delegate:(id<LiveAuthDelegate>)delegate
-              userState:(id)userState;
+               delegate:(id<LiveAuthDelegate>)delegate;
 
 #pragma mark - login* methods
 
