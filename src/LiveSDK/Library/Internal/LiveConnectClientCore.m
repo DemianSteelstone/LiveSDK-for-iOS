@@ -246,14 +246,14 @@
 
 - (LiveOperation *) uploadToPath:(NSString *)path
                         fileName:(NSString *)fileName
-                     inputStream:(NSInputStream *)inputStream
+                         fileURL:(NSURL *)fileURL
                        overwrite:(LiveUploadOverwriteOption)overwrite
                         delegate:(id <LiveUploadOperationDelegate>)delegate
                        userState:(id)userState
 {
     LiveUploadOperationCore *operation = [[[LiveUploadOperationCore alloc] initWithPath:path
                                                                                fileName:fileName
-                                                                            inputStream:inputStream
+                                                                                fileURL:fileURL
                                                                               overwrite:overwrite
                                                                                delegate:delegate
                                                                               userState:userState

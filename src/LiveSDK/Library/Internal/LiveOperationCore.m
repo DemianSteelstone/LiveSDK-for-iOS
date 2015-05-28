@@ -35,6 +35,10 @@
 
 @class LiveConnectClientCore;
 
+@interface LiveOperationCore () <NSURLConnectionDataDelegate>
+
+@end
+
 @implementation LiveOperationCore
 
 @synthesize method = _method,
@@ -43,8 +47,9 @@
           delegate = _delegate,
          userState = _userState,
         liveClient = _liveClient, 
+           fileURL = _fileURL,
        inputStream = _inputStream,
-      streamReader,
+//      streamReader,
            request,
    publicOperation,
          rawResult, 
@@ -80,7 +85,7 @@
 
 - (id) initWithMethod:(NSString *)method
                  path:(NSString *)path
-          inputStream:(NSInputStream *)inputStream
+             fileURL:(NSURL *)fileURL
              delegate:(id)delegate
             userState:(id)userState
            liveClient:(LiveConnectClientCore *)liveClient
@@ -90,7 +95,7 @@
     {
         _method = [method copy];
         _path = [path copy];
-        _inputStream = [inputStream retain];
+        _fileURL = [fileURL retain];
         _delegate = delegate;
         _userState = [userState retain]; 
         _liveClient = [liveClient retain];
@@ -107,8 +112,9 @@
     [_requestBody release];
     [_userState release];
     [_liveClient release];
+    [_fileURL release];
     [_inputStream release];
-    [streamReader release];
+//    [streamReader release];
     [request release];
     [rawResult release];
     [result release];
@@ -165,36 +171,10 @@
    forHTTPHeaderField:LIVE_API_HEADER_CONTENTTYPE];
 }
 
-- (void) readInputStream
-{
-    self.streamReader = [[[StreamReader alloc]initWithStream:_inputStream
-                                                    delegate:self]
-                         autorelease ];
-    [self.streamReader start];
-}
-
-- (void)streamReadingCompleted:(NSData *)data
-{
-    self.requestBody = data;
-    [self sendRequest];
-}
-
-- (void)streamReadingFailed:(NSError *)error
-{
-    [self operationFailed:error];
-}
-
 - (void) sendRequest
 {
     if (completed) 
     {
-        return;
-    }
-    
-    if (_inputStream != nil && _requestBody == nil)
-    {
-        // We have a stream to read.
-        [self readInputStream];
         return;
     }
     
@@ -219,6 +199,12 @@
     {
         [self setRequestContentType];
         [request setHTTPBody:self.requestBody];
+    }
+    else if (self.fileURL != nil)
+    {
+        _inputStream = [[NSInputStream alloc] initWithURL:self.fileURL];
+        [_inputStream retain];
+        [request setHTTPBodyStream:_inputStream];
     }
     
     self.connection = [LiveConnectionHelper createConnectionWithRequest:request delegate:self];    
@@ -344,6 +330,13 @@ didReceiveResponse:(NSURLResponse *)response
     self.connection = nil;
     
     [self operationFailed:error];
+}
+
+-(NSInputStream *)connection:(NSURLConnection *)connection needNewBodyStream:(NSURLRequest *)request
+{
+    [_inputStream release];
+    _inputStream = [[NSInputStream alloc] initWithURL:self.fileURL];
+    return _inputStream;
 }
 
 @end

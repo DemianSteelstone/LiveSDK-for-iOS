@@ -48,7 +48,7 @@
 
 - (id) initWithPath:(NSString *)path
            fileName:(NSString *)fileName
-        inputStream:(NSInputStream *)inputStream
+            fileURL:(NSURL *)fileURL
           overwrite:(LiveUploadOverwriteOption)overwrite
            delegate:(id <LiveUploadOperationDelegate>)delegate
           userState:(id)userState

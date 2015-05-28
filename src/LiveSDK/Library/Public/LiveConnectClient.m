@@ -551,12 +551,12 @@
 
 - (LiveOperation *) uploadToPath:(NSString *)path
                         fileName:(NSString *)fileName
-                     inputStream:(NSInputStream *)inputStream
+                         fileURL:(NSURL *)fileURL
                         delegate:(id <LiveUploadOperationDelegate>)delegate
 {
     return [self uploadToPath:path 
                      fileName:fileName 
-                  inputStream:inputStream 
+                     fileURL:fileURL
                     overwrite:LiveUploadDoNotOverwrite
                      delegate:delegate 
                     userState:nil];
@@ -564,7 +564,7 @@
 
 - (LiveOperation *) uploadToPath:(NSString *)path
                         fileName:(NSString *)fileName
-                     inputStream:(NSInputStream *)inputStream
+                         fileURL:(NSURL *)fileURL
                        overwrite:(LiveUploadOverwriteOption)overwrite
                         delegate:(id <LiveUploadOperationDelegate>)delegate
                        userState:(id)userState
@@ -580,13 +580,13 @@
                     paramName:@"fileName" 
                    methodName:method];   
     
-    [self validateRequiredParam:inputStream
-                      paramName:@"inputStream" 
+    [self validateRequiredParam:fileURL
+                      paramName:@"fileURL"
                      methodName:method];
     
     return [_liveClientCore uploadToPath:path 
                                 fileName:fileName 
-                             inputStream:inputStream 
+                                fileURL:fileURL
                                overwrite:overwrite 
                                 delegate:delegate 
                                userState:userState];

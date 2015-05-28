@@ -315,7 +315,7 @@
 
 - (LiveOperation *) uploadToPath:(NSString *)path
                         fileName:(NSString *)fileName
-                     inputStream:(NSInputStream *)inputStream
+                         fileURL:(NSURL *)fileURL
                         delegate:(id <LiveUploadOperationDelegate>)delegate;
 
 - (LiveOperation *) uploadToPath:(NSString *)path

@@ -27,12 +27,11 @@
 #import <Foundation/Foundation.h>
 #import "LiveAuthDelegate.h"
 #import "LiveOperationDelegate.h"
-#import "StreamReader.h"
 
 @class LiveConnectClientCore;
 @class LiveOperation;
 
-@interface LiveOperationCore : NSObject <StreamReaderDelegate, LiveAuthDelegate>
+@interface LiveOperationCore : NSObject <LiveAuthDelegate>
 
 @property (nonatomic, readonly) NSString *path;
 @property (nonatomic, readonly) NSString *method;
@@ -40,10 +39,10 @@
 @property (nonatomic, readonly) id userState; 
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, readonly) LiveConnectClientCore *liveClient;
-@property (nonatomic, retain) NSInputStream *inputStream;
+@property (nonatomic, retain) NSURL *fileURL;
 @property (nonatomic, readonly) NSURL *requestUrl;
-@property (nonatomic, retain) StreamReader *streamReader;
-@property (nonatomic, retain) NSMutableURLRequest *request; 
+@property (nonatomic, retain) NSInputStream *inputStream;
+@property (nonatomic, retain) NSMutableURLRequest *request;
 
 @property (nonatomic) BOOL completed;
 @property (nonatomic, retain) NSString *rawResult;
@@ -63,7 +62,7 @@
 
 - (id) initWithMethod:(NSString *)method
                  path:(NSString *)path
-          inputStream:(NSInputStream *)inputStream
+              fileURL:(NSURL *)fileURL
              delegate:(id)delegate
             userState:(id)userState
            liveClient:(LiveConnectClientCore *)liveClient;
