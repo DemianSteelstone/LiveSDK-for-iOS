@@ -33,6 +33,7 @@
 #import "LiveOperationDelegate.h"
 #import "LiveUploadOperationDelegate.h"
 #import "LiveUploadOverwriteOption.h"
+#import "LiveInputStream.h"
 
 // LiveConnectClient class represents a client object that helps the app to access Live services
 // on the user behalf. LiveConnectClient class provides two groups of methods:
@@ -315,12 +316,12 @@
 
 - (LiveOperation *) uploadToPath:(NSString *)path
                         fileName:(NSString *)fileName
-                         fileURL:(NSURL *)fileURL
+                     inputStream:(LiveInputStream *)inputStream
                         delegate:(id <LiveUploadOperationDelegate>)delegate;
 
 - (LiveOperation *) uploadToPath:(NSString *)path
                         fileName:(NSString *)fileName
-                     inputStream:(NSInputStream *)inputStream
+                     inputStream:(LiveInputStream *)inputStream
                        overwrite:(LiveUploadOverwriteOption)overwrite
                         delegate:(id <LiveUploadOperationDelegate>)delegate
                        userState:(id)userState;

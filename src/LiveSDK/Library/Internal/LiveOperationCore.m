@@ -37,6 +37,8 @@
 
 @interface LiveOperationCore () <NSURLConnectionDataDelegate>
 
+@property (nonatomic,retain) NSInputStream *stream;
+
 @end
 
 @implementation LiveOperationCore
@@ -47,9 +49,7 @@
           delegate = _delegate,
          userState = _userState,
         liveClient = _liveClient, 
-           fileURL = _fileURL,
        inputStream = _inputStream,
-//      streamReader,
            request,
    publicOperation,
          rawResult, 
@@ -85,7 +85,7 @@
 
 - (id) initWithMethod:(NSString *)method
                  path:(NSString *)path
-             fileURL:(NSURL *)fileURL
+          inputStream:(LiveInputStream *)inputStream
              delegate:(id)delegate
             userState:(id)userState
            liveClient:(LiveConnectClientCore *)liveClient
@@ -95,7 +95,7 @@
     {
         _method = [method copy];
         _path = [path copy];
-        _fileURL = [fileURL retain];
+        _inputStream = [inputStream retain];
         _delegate = delegate;
         _userState = [userState retain]; 
         _liveClient = [liveClient retain];
@@ -112,9 +112,8 @@
     [_requestBody release];
     [_userState release];
     [_liveClient release];
-    [_fileURL release];
     [_inputStream release];
-//    [streamReader release];
+    [_stream release];
     [request release];
     [rawResult release];
     [result release];
@@ -195,17 +194,23 @@
     [request setValue: [LiveApiHelper getXHTTPLiveLibraryHeaderValue]
    forHTTPHeaderField:LIVE_API_HEADER_X_HTTP_LIVE_LIBRARY];
     
+    long long dataSize = 0;
+    
     if (self.requestBody != nil)
     {
+        dataSize = self.requestBody.length;
         [self setRequestContentType];
         [request setHTTPBody:self.requestBody];
     }
-    else if (self.fileURL != nil)
+    else if (self.inputStream != nil)
     {
-        _inputStream = [[NSInputStream alloc] initWithURL:self.fileURL];
-        [_inputStream retain];
-        [request setHTTPBodyStream:_inputStream];
+        dataSize = self.inputStream.fileSize;
+        self.stream = [[_inputStream createInputStream] retain];
+        
+        [request setHTTPBodyStream:self.stream];
     }
+    NSString *dataLengthStr = [NSString stringWithFormat:@"%lld", (long long)dataSize];
+    [request setValue:dataLengthStr forHTTPHeaderField:@"Content-Length"];
     
     self.connection = [LiveConnectionHelper createConnectionWithRequest:request delegate:self];    
 }
@@ -334,9 +339,9 @@ didReceiveResponse:(NSURLResponse *)response
 
 -(NSInputStream *)connection:(NSURLConnection *)connection needNewBodyStream:(NSURLRequest *)request
 {
-    [_inputStream release];
-    _inputStream = [[NSInputStream alloc] initWithURL:self.fileURL];
-    return _inputStream;
+    [self.stream release];
+    self.stream = [[_inputStream createInputStream] retain];
+    return self.stream;
 }
 
 @end

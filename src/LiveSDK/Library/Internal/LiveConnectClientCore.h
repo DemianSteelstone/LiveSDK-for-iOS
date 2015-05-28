@@ -90,7 +90,7 @@
 
 - (LiveOperation *) uploadToPath:(NSString *)path
                         fileName:(NSString *)fileName
-                         fileURL:(NSURL *)fileURL
+                     inputStream:(LiveInputStream *)inputStream
                        overwrite:(LiveUploadOverwriteOption)overwrite
                         delegate:(id <LiveUploadOperationDelegate>)delegate
                        userState:(id)userState;

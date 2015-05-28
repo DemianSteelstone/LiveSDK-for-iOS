@@ -58,7 +58,7 @@
 
 - (id) initWithPath:(NSString *)path
            fileName:(NSString *)fileName
-            fileURL:(NSURL *)fileURL
+            inputStream:(LiveInputStream *)inputStream
           overwrite:(LiveUploadOverwriteOption)overwrite
            delegate:(id <LiveUploadOperationDelegate>)delegate
           userState:(id)userState
@@ -66,8 +66,8 @@
 {
     self = [super initWithMethod:@"PUT" 
                             path:path 
-                         fileURL:fileURL
-                        delegate:delegate 
+                     inputStream:inputStream
+                        delegate:delegate
                        userState:userState 
                       liveClient:liveClient];
     if (self)
