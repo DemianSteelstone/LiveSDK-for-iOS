@@ -33,24 +33,39 @@
 @class LiveDownloadOperation;
 
 @implementation LiveDownloadOperationCore
-
-- (id) initWithPath:(NSString *)path
-           delegate:(id <LiveDownloadOperationDelegate>)delegate
-          userState:(id)userState
-         liveClient:(LiveConnectClientCore *)liveClient
 {
-    self = [super initWithMethod:@"GET" 
-                            path:path 
-                     requestBody:nil 
-                        delegate:delegate 
-                       userState:userState 
+    NSString *_downloadPath;
+    NSFileHandle *_writeHandle;
+}
+-(id)initWithPath:(NSString *)path
+           toFile:(NSString *)filePath
+         delegate:(id<LiveDownloadOperationDelegate>)delegate
+        userState:(id)userState
+       liveClient:(LiveConnectClientCore *)liveClient
+{
+    self = [super initWithMethod:@"GET"
+                            path:path
+                     requestBody:nil
+                        delegate:delegate
+                       userState:userState
                       liveClient:liveClient];
     if (self)
     {
+        NSAssert(filePath, @"LiveDownloadOperation :: File path can't be nil");
         contentLength = 0;
+        _downloadPath = [filePath retain];
+        _writeHandle = [[NSFileHandle fileHandleForWritingAtPath:_downloadPath] retain];
     }
     
     return self;
+    
+}
+
+-(void)dealloc
+{
+    [_downloadPath release];
+    [_writeHandle release];
+    [super dealloc];
 }
 
 #pragma mark override methods
@@ -106,7 +121,7 @@
 
 - (void) operationReceivedData:(NSData *)data
 {
-    [self.responseData appendData:data];
+    [_writeHandle writeData:data];
     
     if ([self.delegate respondsToSelector:@selector(liveDownloadOperationProgressed:data:operation:)])
     {

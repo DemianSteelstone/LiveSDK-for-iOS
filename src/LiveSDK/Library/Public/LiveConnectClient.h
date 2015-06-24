@@ -281,9 +281,11 @@
 //           when a LiveDownloadOperationDelegate protocol method is invoked.
 
 - (LiveDownloadOperation *) downloadFromPath:(NSString *)path
+                                      toFile:(NSString *)filePath
                                     delegate:(id <LiveDownloadOperationDelegate>)delegate;
 
 - (LiveDownloadOperation *) downloadFromPath:(NSString *)path
+                                      toFile:(NSString *)filePath
                                     delegate:(id <LiveDownloadOperationDelegate>)delegate
                                    userState:(id)userState;
 
