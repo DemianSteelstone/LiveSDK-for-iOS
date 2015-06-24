@@ -36,6 +36,7 @@
 {
     NSString *_downloadPath;
     NSFileHandle *_writeHandle;
+    long long _downloadedDataLength;
 }
 -(id)initWithPath:(NSString *)path
            toFile:(NSString *)filePath
@@ -53,8 +54,16 @@
     {
         NSAssert(filePath, @"LiveDownloadOperation :: File path can't be nil");
         contentLength = 0;
+        _downloadedDataLength = 0;
         _downloadPath = [filePath retain];
+       
         _writeHandle = [[NSFileHandle fileHandleForWritingAtPath:_downloadPath] retain];
+        
+        if (_writeHandle == nil)
+        {
+            [[NSFileManager defaultManager] createFileAtPath:_downloadPath contents:nil attributes:nil];
+            _writeHandle = [[NSFileHandle fileHandleForWritingAtPath:_downloadPath] retain];
+        }
     }
     
     return self;
@@ -84,7 +93,9 @@
 
  - (void) operationCompleted
 {
-    if (self.completed) 
+    [_writeHandle closeFile];
+    
+    if (self.completed)
     {
         return;
     }
@@ -130,8 +141,10 @@
             contentLength = [[self.httpResponse.allHeaderFields valueForKey:@"Content-Length"] intValue];
         }
         
+        _downloadedDataLength = _writeHandle.offsetInFile;
+        
         LiveOperationProgress *progress = [[[LiveOperationProgress alloc] 
-                                            initWithBytesTransferred:self.responseData.length 
+                                            initWithBytesTransferred:_downloadedDataLength
                                                           totalBytes:contentLength]
                                            autorelease];
         
