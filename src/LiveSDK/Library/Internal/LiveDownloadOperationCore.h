@@ -35,6 +35,7 @@
 }
 
 - (id) initWithPath:(NSString *)path
+             toFile:(NSString *)filePath
            delegate:(id <LiveDownloadOperationDelegate>)delegate
           userState:(id)userState
          liveClient:(LiveConnectClientCore *)liveClient;

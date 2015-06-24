@@ -486,12 +486,14 @@
 }
 
 - (LiveDownloadOperation *) downloadFromPath:(NSString *)path
+                                      toFile:(NSString *)filePath
                                     delegate:(id <LiveDownloadOperationDelegate>)delegate
 {
-    return [self downloadFromPath:path delegate:delegate userState:nil];
+    return [self downloadFromPath:path toFile:filePath delegate:delegate userState:nil];
 }
 
 - (LiveDownloadOperation *) downloadFromPath:(NSString *)path
+                                      toFile:(NSString *)filePath
                                     delegate:(id <LiveDownloadOperationDelegate>)delegate
                                    userState:(id)userState
 {
@@ -501,7 +503,8 @@
               relative:NO];
 
     
-    return [_liveClientCore downloadFromPath:path 
+    return [_liveClientCore downloadFromPath:path
+                                      toFile:(NSString *)filePath
                                     delegate:delegate 
                                    userState:userState];
 }

@@ -33,24 +33,48 @@
 @class LiveDownloadOperation;
 
 @implementation LiveDownloadOperationCore
-
-- (id) initWithPath:(NSString *)path
-           delegate:(id <LiveDownloadOperationDelegate>)delegate
-          userState:(id)userState
-         liveClient:(LiveConnectClientCore *)liveClient
 {
-    self = [super initWithMethod:@"GET" 
-                            path:path 
-                     requestBody:nil 
-                        delegate:delegate 
-                       userState:userState 
+    NSString *_downloadPath;
+    NSFileHandle *_writeHandle;
+    long long _downloadedDataLength;
+}
+-(id)initWithPath:(NSString *)path
+           toFile:(NSString *)filePath
+         delegate:(id<LiveDownloadOperationDelegate>)delegate
+        userState:(id)userState
+       liveClient:(LiveConnectClientCore *)liveClient
+{
+    self = [super initWithMethod:@"GET"
+                            path:path
+                     requestBody:nil
+                        delegate:delegate
+                       userState:userState
                       liveClient:liveClient];
     if (self)
     {
+        NSAssert(filePath, @"LiveDownloadOperation :: File path can't be nil");
         contentLength = 0;
+        _downloadedDataLength = 0;
+        _downloadPath = [filePath retain];
+       
+        _writeHandle = [[NSFileHandle fileHandleForWritingAtPath:_downloadPath] retain];
+        
+        if (_writeHandle == nil)
+        {
+            [[NSFileManager defaultManager] createFileAtPath:_downloadPath contents:nil attributes:nil];
+            _writeHandle = [[NSFileHandle fileHandleForWritingAtPath:_downloadPath] retain];
+        }
     }
     
     return self;
+    
+}
+
+-(void)dealloc
+{
+    [_downloadPath release];
+    [_writeHandle release];
+    [super dealloc];
 }
 
 #pragma mark override methods
@@ -69,7 +93,9 @@
 
  - (void) operationCompleted
 {
-    if (self.completed) 
+    [_writeHandle closeFile];
+    
+    if (self.completed)
     {
         return;
     }
@@ -106,7 +132,7 @@
 
 - (void) operationReceivedData:(NSData *)data
 {
-    [self.responseData appendData:data];
+    [_writeHandle writeData:data];
     
     if ([self.delegate respondsToSelector:@selector(liveDownloadOperationProgressed:data:operation:)])
     {
@@ -115,8 +141,10 @@
             contentLength = [[self.httpResponse.allHeaderFields valueForKey:@"Content-Length"] intValue];
         }
         
+        _downloadedDataLength = _writeHandle.offsetInFile;
+        
         LiveOperationProgress *progress = [[[LiveOperationProgress alloc] 
-                                            initWithBytesTransferred:self.responseData.length 
+                                            initWithBytesTransferred:_downloadedDataLength
                                                           totalBytes:contentLength]
                                            autorelease];
         

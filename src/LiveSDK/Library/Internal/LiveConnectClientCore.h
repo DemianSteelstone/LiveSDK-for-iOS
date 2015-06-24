@@ -78,6 +78,7 @@
                                 userState:(id) userState;
 
 - (LiveDownloadOperation *) downloadFromPath:(NSString *)path
+                                      toFile:(NSString *)path
                                     delegate:(id <LiveDownloadOperationDelegate>)delegate
                                    userState:(id)userState;
 
