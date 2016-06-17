@@ -31,8 +31,8 @@
 @synthesize bytesTransferred = _bytesTransferred,
             totalBytes = _totalBytes;
 
-- (id) initWithBytesTransferred:(NSUInteger)bytesTransferred
-                     totalBytes:(NSUInteger)totalBytes
+- (id) initWithBytesTransferred:(long long)bytesTransferred
+                     totalBytes:(long long)totalBytes
 {
     self = [super init];
     if (self) 

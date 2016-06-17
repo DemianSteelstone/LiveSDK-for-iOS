@@ -30,14 +30,14 @@
 // of a running operation.
 @interface LiveOperationProgress : NSObject
 
-- (id) initWithBytesTransferred:(NSUInteger)bytesTransferred
-                     totalBytes:(NSUInteger)totalBytes;
+- (id) initWithBytesTransferred:(long long)bytesTransferred
+                     totalBytes:(long long)totalBytes;
 
 // Number of bytes already transferred.
-@property (nonatomic, readonly) NSUInteger bytesTransferred;
+@property (nonatomic, readonly) long long bytesTransferred;
 
 // Total bytes to transfer.
-@property (nonatomic, readonly) NSUInteger totalBytes;
+@property (nonatomic, readonly) long long totalBytes;
 
 // Percentage rate of already transferred bytes.
 @property (nonatomic, readonly) double progressPercentage;
